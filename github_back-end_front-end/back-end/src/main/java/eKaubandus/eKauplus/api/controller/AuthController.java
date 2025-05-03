@@ -1,6 +1,7 @@
 package eKaubandus.eKauplus.api.controller;
 
 import eKaubandus.eKauplus.api.dto.request.*;
+import eKaubandus.eKauplus.api.dto.response.JwtResponse;
 import eKaubandus.eKauplus.api.dto.response.MessageResponse;
 import eKaubandus.eKauplus.api.entity.Role;
 import eKaubandus.eKauplus.api.entity.User;

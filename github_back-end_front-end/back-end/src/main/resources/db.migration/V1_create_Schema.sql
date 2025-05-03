@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS user_roles CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
+
 -- Create roles table
 CREATE TABLE roles (
                        id SERIAL PRIMARY KEY,
@@ -164,9 +165,10 @@ CREATE INDEX idx_marketplace_items_status ON marketplace_items (status);
 -- Create a function to update timestamp
 CREATE OR REPLACE FUNCTION update_timestamp()
 RETURNS TRIGGER AS $$
+
 BEGIN
     NEW.updated_at = CURRENT_TIMESTAMP;
-RETURN NEW;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 

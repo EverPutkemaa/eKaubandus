@@ -1,4 +1,4 @@
-package eKaubandus.eKauplus.api.dto.request;
+package eKaubandus.eKauplus.api.dto.response;
 
 import lombok.Data;
 
