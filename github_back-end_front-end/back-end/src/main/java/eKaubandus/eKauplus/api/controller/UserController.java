@@ -7,6 +7,7 @@ import eKaubandus.eKauplus.api.entity.UserActivity;
 import eKaubandus.eKauplus.api.repository.UserActivityRepository;
 import eKaubandus.eKauplus.api.repository.UserRepository;
 import eKaubandus.eKauplus.api.security.services.UserDetailsImpl;
+import eKaubandus.eKauplus.api.service.S3Service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    @Autowired
+    private S3Service s3Service;
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
@@ -118,6 +122,19 @@ public class UserController {
                 .orElseThrow(() -> new RuntimeException("Error: User not found."));
 
         try {
+            // Kustutame vana profiilipildi, kui see on olemas
+            if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
+                s3Service.deleteFile(user.getProfileImage());
+            }
+
+            // Laadime uue pildi üles S3 bucket'isse
+            String profileImageUrl = s3Service.uploadFile(file, "profile-images");
+
+            // Uuendame kasutaja profiilipildi
+            user.setProfileImage(profileImageUrl);
+            userRepository.save(user);
+
+
             // Create directory if it doesn't exist
             Path uploadPath = Paths.get("uploads/profile-images");
             if (!Files.exists(uploadPath)) {
