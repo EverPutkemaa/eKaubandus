@@ -11,6 +11,7 @@ import eKaubandus.eKauplus.api.repository.UserActivityRepository;
 import eKaubandus.eKauplus.api.repository.UserRepository;
 import eKaubandus.eKauplus.api.security.jwt.JwtUtils;
 import eKaubandus.eKauplus.api.security.services.UserDetailsImpl;
+import eKaubandus.eKauplus.api.service.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -201,8 +205,8 @@ public class AuthController {
         user.setRoles(roles);
         User savedUser = userRepository.save(user);
 
-        // TODO: Send verification email with token
-
+        // Send verification email with token
+        emailService.sendVerificationEmail(user.getEmail(), verificationToken);
         // Log registration activity
         UserActivity activity = new UserActivity();
         activity.setUser(savedUser);
@@ -247,7 +251,8 @@ public class AuthController {
         user.setResetPasswordTokenExpiryDate(LocalDateTime.now().plusDays(1));
         userRepository.save(user);
 
-        // TODO: Send password reset email with token
+        // Send password reset email with token
+        emailService.sendPasswordResetEmail(user.getEmail(), resetToken);
 
         return ResponseEntity.ok(new MessageResponse("Password reset link has been sent to your email."));
     }
