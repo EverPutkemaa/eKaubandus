@@ -21,13 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -123,7 +118,8 @@ public class UserController {
 
         try {
             // Kustutame vana profiilipildi, kui see on olemas
-            if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
+            if (user.getProfileImage() != null && !user.getProfileImage().isEmpty() &&
+                    user.getProfileImage().contains(".s3.")) {  // Kontrollime, et tegemist on S3 URL-iga
                 s3Service.deleteFile(user.getProfileImage());
             }
 
@@ -132,24 +128,6 @@ public class UserController {
 
             // Uuendame kasutaja profiilipildi
             user.setProfileImage(profileImageUrl);
-            userRepository.save(user);
-
-
-            // Create directory if it doesn't exist
-            Path uploadPath = Paths.get("uploads/profile-images");
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-
-            // Generate unique filename
-            String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            Path filePath = uploadPath.resolve(filename);
-
-            // Save file
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-            // Update user's profile image
-            user.setProfileImage("/uploads/profile-images/" + filename);
             userRepository.save(user);
 
             // Log user activity
