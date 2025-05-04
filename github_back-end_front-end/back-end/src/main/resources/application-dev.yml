@@ -1,0 +1,26 @@
+spring:
+  mail:
+    host: localhost
+    port: 1025  # MailHog or MockSMTP
+    username:
+    password:
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+aws:
+  s3:
+    # Arenduseks võib kasutada LocalStack või MinIO
+    endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+
+logging:
+  level:
+    org.springframework.security: TRACE
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    eKaubandus.eKauplus: DEBUG
