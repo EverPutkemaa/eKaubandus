@@ -32,4 +32,4 @@ ENV AWS_SECRET_KEY=${AWS_SECRET_KEY}
 EXPOSE 8080
 
 # Rakenduse käivitamine
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Djdk.internal.warn=false", "-jar", "app.jar"]
