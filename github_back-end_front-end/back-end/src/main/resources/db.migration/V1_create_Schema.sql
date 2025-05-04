@@ -72,6 +72,7 @@ CREATE TABLE products (
                           stock INTEGER,
                           rating FLOAT,
                           review_count INTEGER,
+                          sold_count INTEGER DEFAULT 0,
                           is_new BOOLEAN DEFAULT FALSE,
                           discount_percentage INTEGER,
                           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
