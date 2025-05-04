@@ -12,6 +12,11 @@ import eKaubandus.eKauplus.api.repository.UserRepository;
 import eKaubandus.eKauplus.api.security.jwt.JwtUtils;
 import eKaubandus.eKauplus.api.security.services.UserDetailsImpl;
 import eKaubandus.eKauplus.api.service.EmailService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +57,17 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Operation(summary = "Kasutaja sisselogimine",
+            description = "Autentimise JWT tokeni saamise meetod")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Edukas autentimine",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = JwtResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Vigased sisendandmed",
+                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "Vale kasutajanimi või parool")
+    })
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest,
@@ -143,6 +159,13 @@ public class AuthController {
                     .body(new MessageResponse("Error: Invalid username or password!"));
         }
     }
+
+    @Operation(summary = "Kasutaja registreerimine",
+            description = "Loob uue kasutaja konto")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Kasutaja edukalt registreeritud"),
+            @ApiResponse(responseCode = "400", description = "Kasutaja eksisteerib juba")
+    })
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest,

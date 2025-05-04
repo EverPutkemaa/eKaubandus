@@ -37,6 +37,18 @@ spring:
   servlet:
     multipart:
       max-file-size: 5MB
+springdoc:
+    api-docs:
+      path: /v3/api-docs
+    swagger-ui:
+      path: /swagger-ui.html
+      enabled: true
+      operations-sorter: method
+      tags-sorter: alpha
+    show-actuator: false
+    use-management-port: false
+    packages-to-scan: eKaubandus.eKauplus.api.controller
+
 
 server:
   port: 8080
